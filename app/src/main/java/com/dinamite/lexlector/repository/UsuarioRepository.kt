@@ -3,7 +3,7 @@ package com.dinamite.lexlector.repository
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import com.dinamite.lexlector.data.Usuario
+import com.dinamite.lexlector.model.Usuario
 
 
 object UsuarioRepository {
