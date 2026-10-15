@@ -1,4 +1,4 @@
-package com.dinamite.lexlector.data
+package com.dinamite.lexlector.model
 
 data class Usuario(
     val id: Int,

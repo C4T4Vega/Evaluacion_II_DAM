@@ -63,4 +63,18 @@ class AuthViewModel : ViewModel() {
             return false
         }
     }
+
+    //Variables y funciones de perfil del usuario para taera 1.6
+    var modoOscuro by mutableStateOf(false)
+    var usarFuenteSans by mutableStateOf(true)
+
+    //obtenemos el usuario que inicio sesion desde el repositorio
+    val usuarioActual get() = UsuarioRepository.usuarioLogueado
+
+    fun cerrarSesion() {
+        UsuarioRepository.cerrarSesion()
+        correoLogin = ""
+        claveLogin = ""
+        mensajeErrorLogin= ""
+    }
 }
