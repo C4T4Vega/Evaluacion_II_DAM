@@ -36,7 +36,7 @@ fun LoginScreen(
     ) {
         Image(
             painter = painterResource(id = R.drawable.lexlector),
-            contentDescription = "Foto de perfil",
+            contentDescription = "icono de app",
             modifier = Modifier
                 .size(80.dp)
                 .clip(CircleShape)
