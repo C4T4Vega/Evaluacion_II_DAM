@@ -13,6 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import com.dinamite.lexlector.ui.BienvenidaScreen
 import com.dinamite.lexlector.ui.LoginScreen
 import com.dinamite.lexlector.ui.PerfilScreen
+import com.dinamite.lexlector.ui.PrincipalScreen
 import com.dinamite.lexlector.ui.RegistroScreen
 import com.dinamite.lexlector.ui.theme.LexLectorTheme
 import com.dinamite.lexlector.viewmodel.AuthViewModel
@@ -55,6 +56,14 @@ class MainActivity : ComponentActivity() {
                             pantallaActual = "registro"
                         }
                     )
+                //Pantalla principal
+                } else if (pantallaActual == "inicio") {
+                    PrincipalScreen(
+                        viewModel = authViewModel,
+                        onCerrarSesion = {
+                            pantallaActual = "login"
+                        }
+                    )
 
                 // Dependiendo del valor de "pantallaActual", mostramos una vista u otra
                 } else if (pantallaActual == "login") {
@@ -62,7 +71,7 @@ class MainActivity : ComponentActivity() {
                         viewModel = authViewModel,
                         onLoginExitoso = {
                             // Cuando el login es correcto, pasamos a la pantalla de Perfil
-                            pantallaActual = "perfil"
+                            pantallaActual = "inicio"
                         },
                         onIrARegistro = {
                             pantallaActual = "registro"
