@@ -18,6 +18,7 @@ fun NavInferior(
 ){
     val menuItems = listOf( //define una lista con los elementos que aparecen en la barra
         Item_bottom_nav1,
+        Item_bottom_nav_leyes, // <-- NUEVO: hace que aparezca el ícono en la barra azul
         Item_bottom_nav2
     )
     //Mira el historial de navegacion para obtener la ruta actual de la pantalla

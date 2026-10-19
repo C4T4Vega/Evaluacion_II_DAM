@@ -26,6 +26,14 @@ fun Navegacion(
         composable(NavScreen.HomeScreen.name) { //carga el @Composable de Home
             HomeScreen()
         }
+        // NUEVO: Carga tu pantalla de Catalogo cuando tocan el boton en el menu
+        composable(NavScreen.CatalogoScreen.name) {
+            com.dinamite.lexlector.ui.CatalogoScreen(
+                onLeyClick = {
+                    // Aquí en el siguiente paso abrirá el Detalle de la Ley (Tarea 2.5)
+                }
+            )
+        }
 
         composable(NavScreen.PerfilScreen.name) {//carga el @Composable de perfil
             PerfilScreen(
