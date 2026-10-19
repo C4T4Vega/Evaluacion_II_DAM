@@ -16,9 +16,9 @@ fun PrincipalScreen(
 ) {
 
     val navController = rememberNavController()//inicia y recuerda el controlador de navegacion
-    Surface(color = Color.White) { //define el color de la pantalla
-        Scaffold( //estructura visual
-            containerColor = Color.White,
+    Surface(color = androidx.compose.material3.MaterialTheme.colorScheme.background) {
+        Scaffold(
+            containerColor = androidx.compose.material3.MaterialTheme.colorScheme.background,
             //coloca el menu en la parte inferior pasandole navController
             bottomBar = {
                 NavInferior(navController = navController)

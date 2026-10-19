@@ -40,63 +40,42 @@ class MainActivity : ComponentActivity() {
 
         super.onCreate(savedInstanceState)
         setContent {
-            LexLectorTheme {
-                // Variable simple para controlar qué pantalla se está mostrando en el celular
-                var pantallaActual by remember { mutableStateOf("bienvenida") }
-
-                //pantalla de bienvenida
-                if (pantallaActual == "bienvenida") {
-                    BienvenidaScreen(
-                        // va al login cuando presiona el boton
-                        onLoginClick = {
-                            pantallaActual = "login"
-                        },
-                        // va a registro
-                        onRegisterClick = {
-                            pantallaActual = "registro"
-                        }
-                    )
-                //Pantalla principal
-                } else if (pantallaActual == "inicio") {
-                    PrincipalScreen(
-                        viewModel = authViewModel,
-                        onCerrarSesion = {
-                            pantallaActual = "login"
-                        }
-                    )
-
-                // Dependiendo del valor de "pantallaActual", mostramos una vista u otra
-                } else if (pantallaActual == "login") {
-                    LoginScreen(
-                        viewModel = authViewModel,
-                        onLoginExitoso = {
-                            // Cuando el login es correcto, pasamos a la pantalla de Perfil
-                            pantallaActual = "inicio"
-                        },
-                        onIrARegistro = {
-                            pantallaActual = "registro"
-                        }
-                    )
-                } else if (pantallaActual == "registro") {
-                    RegistroScreen(
-                        viewModel = authViewModel,
-                        onRegistroExitoso = {
-                            pantallaActual = "login"
-                        },
-                        onVolverALogin = {
-                            pantallaActual = "login"
-                        }
-                    )
-                } else if (pantallaActual == "perfil") {
-                    PerfilScreen(
-                        viewModel = authViewModel,
-                        onCerrarSesion = {
-                            // Cuando el usuario cierra sesion, volvemos a la pantalla de Login
-                            pantallaActual = "login"
-                        }
-                    )
+            LexLectorTheme(darkTheme = authViewModel.modoOscuro) {
+                // Surface aplica el fondo oscuro o claro a TODAS las pantallas de la app
+                androidx.compose.material3.Surface(
+                    color = androidx.compose.material3.MaterialTheme.colorScheme.background
+                ) {
+                    var pantallaActual by remember { mutableStateOf("bienvenida") }
+                    when (pantallaActual) {
+                    "bienvenida" -> {
+                        BienvenidaScreen(
+                            onLoginClick = { pantallaActual = "login" },
+                            onRegisterClick = { pantallaActual = "registro" }
+                        )
+                    }
+                    "login" -> {
+                        LoginScreen(
+                            viewModel = authViewModel,
+                            onLoginExitoso = { pantallaActual = "inicio" },
+                            onIrARegistro = { pantallaActual = "registro" }
+                        )
+                    }
+                    "registro" -> {
+                        RegistroScreen(
+                            viewModel = authViewModel,
+                            onRegistroExitoso = { pantallaActual = "login" },
+                            onVolverALogin = { pantallaActual = "login" }
+                        )
+                    }
+                    "inicio" -> {
+                        PrincipalScreen(
+                            viewModel = authViewModel,
+                            onCerrarSesion = { pantallaActual = "login" }
+                        )
+                    }
                 }
             }
         }
     }
+}
 }

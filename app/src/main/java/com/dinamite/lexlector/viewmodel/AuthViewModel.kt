@@ -56,7 +56,11 @@ class AuthViewModel : ViewModel() {
         )
 
         if (guardado) {
-            mensajeRegistro = "Usuario registrado con éxito"
+            nombreRegistro = ""
+            apellidoRegistro = ""
+            correoRegistro = ""
+            claveRegistro = ""
+            mensajeRegistro = ""
             return true
         } else {
             mensajeRegistro = "El correo ya existe"

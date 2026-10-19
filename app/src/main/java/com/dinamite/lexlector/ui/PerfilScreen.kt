@@ -33,8 +33,8 @@ fun PerfilScreen(
     // 2. Variable simple para abrir o cerrar el modal de cerrar sesión
     var mostrarModal by remember { mutableStateOf(false) }
 
-    // 3. Variable simple para el modo oscuro (Requisito de tu tarjeta de Trello)
-    var esOscuro by remember { mutableStateOf(false) }
+    // 3. Usamos la variable del ViewModel para que no se reinicie al cambiar de pestaña
+    val esOscuro = viewModel.modoOscuro
 
     // Colores simples que cambian según el interruptor
     val colorFondo = if (esOscuro) Color(0xFF1E1E1E) else Color(0xFFF5F5F5)
@@ -64,7 +64,7 @@ fun PerfilScreen(
         ) {
             // REQUISITO: Una imagen (Ícono circular de la app)
             Image(
-                painter = painterResource(id = R.drawable.ic_launcher_foreground),
+                painter = painterResource(id = R.drawable.lexlector),
                 contentDescription = "Foto de perfil",
                 modifier = Modifier
                     .size(80.dp)
@@ -136,13 +136,13 @@ fun PerfilScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = if (esOscuro) "Modo Oscuro Activado" else "Modo Claro Activado",
+                    text = if (viewModel.modoOscuro) "Modo Oscuro Activado" else "Modo Claro Activado",
                     color = colorTexto,
                     fontWeight = FontWeight.Medium
                 )
                 Switch(
-                    checked = esOscuro,
-                    onCheckedChange = { esOscuro = it },
+                    checked = viewModel.modoOscuro,
+                    onCheckedChange = { viewModel.modoOscuro = it },
                     colors = SwitchDefaults.colors(
                         checkedThumbColor = colorResource(id = R.color.azul), // Color del círculo (thumb) cuando está ENCENDIDO
                         checkedTrackColor = colorResource(id = R.color.cian_azul), // Color de la pista (track) cuando está ENCENDIDO
