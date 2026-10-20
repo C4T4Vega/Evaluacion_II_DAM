@@ -14,16 +14,18 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.dinamite.lexlector.R
 import com.dinamite.lexlector.model.Ley
-import com.dinamite.lexlector.repository.LeyRepository
+import com.dinamite.lexlector.viewmodel.LeyViewModel
 
 @Composable
 fun CatalogoScreen(
+    viewModel: LeyViewModel = viewModel(),
     onLeyClick: (Ley) -> Unit
 ) {
-    val todasLasLeyes = LeyRepository.listaLeyes
-    val leyesRecientes = todasLasLeyes.filter { it.esReciente }
+    val todasLasLeyes = viewModel.todasLasLeyes
+    val leyesRecientes = viewModel.leyesRecientes
 
     Column(
         modifier = Modifier
@@ -33,7 +35,6 @@ fun CatalogoScreen(
     ) {
         Spacer(modifier = Modifier.height(20.dp))
 
-        // Título de la pantalla
         Text(
             text = "Documentos",
             fontFamily = FontFamily(Font(R.font.clashgrotesk)),
@@ -43,7 +44,6 @@ fun CatalogoScreen(
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        // SECCIÓN 1: Actualizados recientemente
         Text(
             text = "Actualizados recientemente",
             fontSize = 18.sp,
@@ -55,7 +55,7 @@ fun CatalogoScreen(
 
         leyesRecientes.forEach { ley ->
             TarjetaLeySimple(ley = ley, onClick = {
-                LeyRepository.leySeleccionada = ley
+                viewModel.seleccionarLey(ley)
                 onLeyClick(ley)
             })
             Spacer(modifier = Modifier.height(8.dp))
@@ -63,7 +63,6 @@ fun CatalogoScreen(
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        // SECCIÓN 2: Todos los documentos
         Text(
             text = "Todos los documentos",
             fontSize = 18.sp,
@@ -75,7 +74,7 @@ fun CatalogoScreen(
 
         todasLasLeyes.forEach { ley ->
             TarjetaLeySimple(ley = ley, onClick = {
-                LeyRepository.leySeleccionada = ley
+                viewModel.seleccionarLey(ley)
                 onLeyClick(ley)
             })
             Spacer(modifier = Modifier.height(8.dp))
@@ -83,7 +82,6 @@ fun CatalogoScreen(
     }
 }
 
-// Componente pequeño y reutilizable para dibujar cada cajita de ley
 @Composable
 fun TarjetaLeySimple(ley: Ley, onClick: () -> Unit) {
     Card(
