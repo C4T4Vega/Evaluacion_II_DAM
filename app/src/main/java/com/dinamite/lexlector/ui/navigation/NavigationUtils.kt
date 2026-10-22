@@ -1,4 +1,4 @@
-package com.dinamite.lexlector.navigation
+package com.dinamite.lexlector.ui.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController

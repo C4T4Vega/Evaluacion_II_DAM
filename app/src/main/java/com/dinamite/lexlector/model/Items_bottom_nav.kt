@@ -5,7 +5,7 @@ import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.dinamite.lexlector.navigation.NavScreen
+import com.dinamite.lexlector.ui.navigation.NavScreen
 
 sealed class Items_bottom_nav (
     val icon: ImageVector, // imagen vectorial que se usara

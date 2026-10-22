@@ -3,10 +3,9 @@ package com.dinamite.lexlector.ui
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
 import androidx.navigation.compose.rememberNavController
-import com.dinamite.lexlector.components.NavInferior
-import com.dinamite.lexlector.navigation.Navegacion
+import com.dinamite.lexlector.ui.components.NavInferior
+import com.dinamite.lexlector.ui.navigation.Navegacion
 import com.dinamite.lexlector.viewmodel.AuthViewModel
 
 @Composable

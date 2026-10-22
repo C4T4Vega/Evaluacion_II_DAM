@@ -1,4 +1,4 @@
-package com.dinamite.lexlector.components
+package com.dinamite.lexlector.ui.components
 
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar

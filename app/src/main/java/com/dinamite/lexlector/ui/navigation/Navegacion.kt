@@ -1,4 +1,4 @@
-package com.dinamite.lexlector.navigation
+package com.dinamite.lexlector.ui.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
@@ -7,6 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.dinamite.lexlector.ui.CatalogoScreen
 import com.dinamite.lexlector.ui.HomeScreen
 import com.dinamite.lexlector.ui.PerfilScreen
 import com.dinamite.lexlector.viewmodel.AuthViewModel
@@ -28,7 +29,7 @@ fun Navegacion(
         }
         // NUEVO: Carga tu pantalla de Catalogo cuando tocan el boton en el menu
         composable(NavScreen.CatalogoScreen.name) {
-            com.dinamite.lexlector.ui.CatalogoScreen(
+            CatalogoScreen(
                 onLeyClick = {
                     // Aquí en el siguiente paso abrirá el Detalle de la Ley (Tarea 2.5)
                 }
