@@ -4,5 +4,6 @@ package com.dinamite.lexlector.ui.navigation
 enum class NavScreen {
     HomeScreen, //pantalla de inicio
     CatalogoScreen, // <-- NUEVO: pantalla del catálogo de leyes
+    DetalleLeyScreen, // nueva: pantalla de detalle de la ley
     PerfilScreen //pantalla del perfil de usuario
 }
