@@ -1,5 +1,6 @@
 package com.dinamite.lexlector.viewmodel
 
+import android.graphics.Bitmap
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -71,6 +72,10 @@ class AuthViewModel : ViewModel() {
     //Variables y funciones de perfil del usuario para taera 1.6
     var modoOscuro by mutableStateOf(false)
     var usarFuenteSans by mutableStateOf(true)
+    var fotoPerfil by mutableStateOf<Bitmap?>(null)
+    fun actualizarFotoPerfil(bitmap: Bitmap) {
+        fotoPerfil = bitmap
+    }
 
     //obtenemos el usuario que inicio sesion desde el repositorio
     val usuarioActual get() = UsuarioRepository.usuarioLogueado

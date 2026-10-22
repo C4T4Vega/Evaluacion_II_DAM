@@ -1,15 +1,22 @@
 package com.dinamite.lexlector.ui
 
+import android.graphics.Bitmap
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -33,10 +40,19 @@ fun PerfilScreen(
     // 2. Variable simple para abrir o cerrar el modal de cerrar sesión
     var mostrarModal by remember { mutableStateOf(false) }
 
-    // 3. Usamos la variable del ViewModel para que no se reinicie al cambiar de pestaña
+    // 3. Variable de modo oscuro desde el ViewModel
     val esOscuro = viewModel.modoOscuro
 
-    // Colores simples que cambian según el interruptor
+    // 4. Lanzador nativo para abrir la cámara del teléfono
+    val camaraLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.TakePicturePreview()
+    ) { bitmap: Bitmap? ->
+        if (bitmap != null) {
+            viewModel.actualizarFotoPerfil(bitmap)
+        }
+    }
+
+    // Colores que cambian según el interruptor de modo oscuro
     val colorFondo = if (esOscuro) Color(0xFF1E1E1E) else Color(0xFFF5F5F5)
     val colorTexto = if (esOscuro) Color.White else Color.Black
     val colorCampo = if (esOscuro) Color.White else colorResource(id = R.color.azul)
@@ -48,6 +64,7 @@ fun PerfilScreen(
             .padding(24.dp)
     ) {
         Spacer(modifier = Modifier.height(30.dp))
+
         // Título de la pantalla
         Text(
             text = "Perfil",
@@ -56,25 +73,71 @@ fun PerfilScreen(
             fontWeight = FontWeight.Bold,
             color = colorTexto
         )
-        Spacer(modifier = Modifier.height(32.dp))
+
+        Spacer(modifier = Modifier.height(24.dp))
 
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.Center,
+            modifier = Modifier.fillMaxWidth()
         ) {
-            // REQUISITO: Una imagen (Ícono circular de la app)
-            Image(
-                painter = painterResource(id = R.drawable.lexlector),
-                contentDescription = "Foto de perfil",
-                modifier = Modifier
-                    .size(80.dp)
-                    .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.primary)
-            )
+            // FOTO DE PERFIL CON CÁMARA (Tarea 2.6)
+            Box(
+                contentAlignment = Alignment.BottomEnd
+            ) {
+                if (viewModel.fotoPerfil != null) {
+                    // Muestra la foto tomada con la cámara nativa
+                    Image(
+                        bitmap = viewModel.fotoPerfil!!.asImageBitmap(),
+                        contentDescription = "Foto tomada con cámara",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .size(90.dp)
+                            .clip(CircleShape)
+                    )
+                } else {
+                    // Muestra el logo por defecto si todavía no toma foto
+                    Image(
+                        painter = painterResource(id = R.drawable.lexlector),
+                        contentDescription = "Foto de perfil",
+                        modifier = Modifier
+                            .size(90.dp)
+                            .clip(CircleShape)
+                            .background(MaterialTheme.colorScheme.primary)
+                    )
+                }
 
-            Spacer(modifier = Modifier.height(16.dp))
+                // Botoncito flotante circular con icono de cámara
+                IconButton(
+                    onClick = { camaraLauncher.launch(null) },
+                    modifier = Modifier
+                        .size(32.dp)
+                        .clip(CircleShape)
+                        .background(colorResource(id = R.color.azul))
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.CameraAlt,
+                        contentDescription = "Tomar foto con cámara",
+                        tint = Color.White,
+                        modifier = Modifier.size(18.dp)
+                    )
+                }
+            }
 
-            // Nombre y Apellido del usuario (Datos personales)
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Botón de texto alternativo para abrir la cámara
+            TextButton(onClick = { camaraLauncher.launch(null) }) {
+                Text(
+                    text = "Tomar foto con cámara",
+                    fontSize = 13.sp,
+                    color = colorCampo
+                )
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Nombre y Apellido del usuario
             Text(
                 text = "${usuario?.nombre ?: ""} ${usuario?.apellido ?: ""}",
                 fontSize = 18.sp,
@@ -91,9 +154,7 @@ fun PerfilScreen(
                 readOnly = true,
                 label = { Text("Correo") },
                 modifier = Modifier.fillMaxWidth(),
-                textStyle = TextStyle(
-                    color = colorTexto
-                ),
+                textStyle = TextStyle(color = colorTexto),
                 colors = OutlinedTextFieldDefaults.colors(
                     unfocusedBorderColor = colorCampo,
                     focusedBorderColor = colorCampo,
@@ -114,9 +175,7 @@ fun PerfilScreen(
                 label = { Text("Contraseña") },
                 visualTransformation = PasswordVisualTransformation(),
                 modifier = Modifier.fillMaxWidth(),
-                textStyle = TextStyle(
-                    color = colorTexto
-                ),
+                textStyle = TextStyle(color = colorTexto),
                 colors = OutlinedTextFieldDefaults.colors(
                     unfocusedBorderColor = colorCampo,
                     focusedBorderColor = colorCampo,
@@ -129,7 +188,7 @@ fun PerfilScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Interruptor para cambiar a modo oscuro (Cumple con tu tarjeta de Trello)
+            // Interruptor para cambiar a modo oscuro
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -144,17 +203,17 @@ fun PerfilScreen(
                     checked = viewModel.modoOscuro,
                     onCheckedChange = { viewModel.modoOscuro = it },
                     colors = SwitchDefaults.colors(
-                        checkedThumbColor = colorResource(id = R.color.azul), // Color del círculo (thumb) cuando está ENCENDIDO
-                        checkedTrackColor = colorResource(id = R.color.cian_azul), // Color de la pista (track) cuando está ENCENDIDO
-                        uncheckedThumbColor = Color.Gray, // Color del círculo (thumb) cuando está APAGADO
-                        uncheckedTrackColor = Color.LightGray // Color de la pista (track) cuando está APAGADO
+                        checkedThumbColor = colorResource(id = R.color.azul),
+                        checkedTrackColor = colorResource(id = R.color.cian_azul),
+                        uncheckedThumbColor = Color.Gray,
+                        uncheckedTrackColor = Color.LightGray
                     )
                 )
             }
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            // Botón para activar el Modal de Cerrar Sesión
+            // Botón para cerrar sesión
             Button(
                 onClick = { mostrarModal = true },
                 modifier = Modifier.fillMaxWidth(),
@@ -167,7 +226,7 @@ fun PerfilScreen(
             }
         }
 
-        // REQUISITO: Un Modal (AlertDialog simple)
+        // Modal de confirmacion para salir
         if (mostrarModal) {
             AlertDialog(
                 onDismissRequest = { mostrarModal = false },
