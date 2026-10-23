@@ -12,7 +12,6 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import com.dinamite.lexlector.ui.BienvenidaScreen
 import com.dinamite.lexlector.ui.LoginScreen
-import com.dinamite.lexlector.ui.PerfilScreen
 import com.dinamite.lexlector.ui.PrincipalScreen
 import com.dinamite.lexlector.ui.RegistroScreen
 import com.dinamite.lexlector.ui.theme.LexLectorTheme

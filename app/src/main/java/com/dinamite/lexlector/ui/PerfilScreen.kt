@@ -1,5 +1,7 @@
 package com.dinamite.lexlector.ui
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -17,6 +19,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -26,6 +29,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import com.dinamite.lexlector.R
 import com.dinamite.lexlector.viewmodel.AuthViewModel
 
@@ -49,6 +53,28 @@ fun PerfilScreen(
     ) { bitmap: Bitmap? ->
         if (bitmap != null) {
             viewModel.actualizarFotoPerfil(bitmap)
+        }
+    }
+
+    val context = LocalContext.current
+
+    // Si el usuario concede el permiso, se abre la cámara inmediatamente.
+    val permisoCamaraLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { concedido ->
+        if (concedido) {
+            camaraLauncher.launch(null)
+        }
+    }
+
+    // La cámara se abre solo si el permiso ya está concedido; si no, se solicita primero.
+    val abrirCamara = {
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) ==
+            PackageManager.PERMISSION_GRANTED
+        ) {
+            camaraLauncher.launch(null)
+        } else {
+            permisoCamaraLauncher.launch(Manifest.permission.CAMERA)
         }
     }
 
@@ -109,7 +135,7 @@ fun PerfilScreen(
 
                 // Botoncito flotante circular con icono de cámara
                 IconButton(
-                    onClick = { camaraLauncher.launch(null) },
+                    onClick = abrirCamara,
                     modifier = Modifier
                         .size(32.dp)
                         .clip(CircleShape)
@@ -127,7 +153,7 @@ fun PerfilScreen(
             Spacer(modifier = Modifier.height(8.dp))
 
             // Botón de texto alternativo para abrir la cámara
-            TextButton(onClick = { camaraLauncher.launch(null) }) {
+            TextButton(onClick = abrirCamara) {
                 Text(
                     text = "Tomar foto con cámara",
                     fontSize = 13.sp,
