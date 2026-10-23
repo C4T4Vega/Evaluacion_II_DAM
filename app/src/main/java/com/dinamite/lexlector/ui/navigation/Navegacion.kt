@@ -31,7 +31,14 @@ fun Navegacion(
         modifier = Modifier.padding(paddingValues)
     ) {
         composable(NavScreen.HomeScreen.name) {
-            HomeScreen()
+            HomeScreen(
+                viewModel = leyViewModel,
+                onLeyClick = { ley ->
+                    // Guarda la ley como "vista recientemente" y abre su detalle.
+                    leyViewModel.seleccionarLey(ley)
+                    navController.navigate(NavScreen.DetalleLeyScreen.name)
+                }
+            )
         }
 
         // Catálogo de Leyes
