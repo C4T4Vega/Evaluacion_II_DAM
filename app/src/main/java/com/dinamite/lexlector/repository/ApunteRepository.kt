@@ -27,4 +27,9 @@ object ApunteRepository {
         val nuevoId = (_apuntes.maxOfOrNull { it.id } ?: 0) + 1
         _apuntes = _apuntes + apunte.copy(id = nuevoId)
     }
+
+    // Función para eliminar un apunte
+    fun eliminarApunte(id: Int) {
+        _apuntes = _apuntes.filter { it.id != id }
+    }
 }
