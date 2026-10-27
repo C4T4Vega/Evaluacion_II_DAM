@@ -9,6 +9,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.dinamite.lexlector.ui.CatalogoScreen
+import com.dinamite.lexlector.ui.CrearNotaScreen
 import com.dinamite.lexlector.ui.DetalleLeyScreen
 import com.dinamite.lexlector.ui.HomeScreen
 import com.dinamite.lexlector.ui.PerfilScreen
@@ -46,7 +47,6 @@ fun Navegacion(
             CatalogoScreen(
                 viewModel = leyViewModel,
                 onLeyClick = {
-                    // 2. Al tocar la ley, navegamos a la pantalla de detalle (Tarea 2.5)
                     navController.navigate(NavScreen.DetalleLeyScreen.name)
                 }
             )
@@ -58,14 +58,28 @@ fun Navegacion(
                 viewModel = leyViewModel,
                 onVolver = {
                     navController.popBackStack() // Vuelve atrás al catálogo
+                },
+                onVerApuntes = {
+                    // Navega a la pantalla de crear notas (Tarea 3.3)
+                    navController.navigate(NavScreen.CrearNotaScreen.name)
                 }
             )
         }
 
+        // Pantalla de Perfil
         composable(NavScreen.PerfilScreen.name) {
             PerfilScreen(
                 viewModel = viewModel,
                 onCerrarSesion = onCerrarSesion
+            )
+        }
+
+        // Pantalla de Crear Nota
+        composable(NavScreen.CrearNotaScreen.name) {
+            CrearNotaScreen(
+                leyNombre = leyViewModel.leySeleccionada?.nombre ?: "Código Civil",
+                onVolver = { navController.popBackStack() },
+                onGuardadoExitoso = { navController.popBackStack() }
             )
         }
     }

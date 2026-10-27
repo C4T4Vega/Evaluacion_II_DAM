@@ -27,7 +27,8 @@ import com.dinamite.lexlector.viewmodel.LeyViewModel
 @Composable
 fun DetalleLeyScreen(
     viewModel: LeyViewModel,
-    onVolver: () -> Unit
+    onVolver: () -> Unit,
+    onVerApuntes: () -> Unit
 ) {
     // 1. Obtenemos la ley seleccionada desde el ViewModel
     val ley = viewModel.leySeleccionada
@@ -126,7 +127,7 @@ fun DetalleLeyScreen(
             }
 
             OutlinedButton(
-                onClick = { /* En Semana 3 abrirá apuntes */ },
+                onClick = onVerApuntes, // <-- Ahora sí funciona sin error
                 modifier = Modifier.weight(1f)
             ) {
                 Text("Ver Apuntes", color = colorResource(id = R.color.azul))
