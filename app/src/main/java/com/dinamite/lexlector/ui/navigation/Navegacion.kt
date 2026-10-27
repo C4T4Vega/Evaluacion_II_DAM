@@ -12,6 +12,7 @@ import com.dinamite.lexlector.ui.CatalogoScreen
 import com.dinamite.lexlector.ui.CrearNotaScreen
 import com.dinamite.lexlector.ui.DetalleLeyScreen
 import com.dinamite.lexlector.ui.HomeScreen
+import com.dinamite.lexlector.ui.ListaApuntesScreen
 import com.dinamite.lexlector.ui.PerfilScreen
 import com.dinamite.lexlector.viewmodel.AuthViewModel
 import com.dinamite.lexlector.viewmodel.LeyViewModel
@@ -60,8 +61,35 @@ fun Navegacion(
                     navController.popBackStack() // Vuelve atrás al catálogo
                 },
                 onVerApuntes = {
-                    // Navega a la pantalla de crear notas (Tarea 3.3)
+                    // Ahora al tocar "Ver Apuntes", abre la Lista de Apuntes (Tarea 3.4)
+                    navController.navigate(NavScreen.ListaApuntesScreen.name)
+                }
+            )
+        }
+
+        // Lista de Apuntes (Tarea 3.4)
+        composable(NavScreen.ListaApuntesScreen.name) {
+            ListaApuntesScreen(
+                leyNombreFiltro = leyViewModel.leySeleccionada?.nombre,
+                onVolver = {
+                    navController.popBackStack()
+                },
+                onCrearNuevoApunte = {
+                    // El botón "+" abre la pantalla de crear apunte con esquema
                     navController.navigate(NavScreen.CrearNotaScreen.name)
+                }
+            )
+        }
+
+        // Crear Nota con Esquema (Tarea 3.3)
+        composable(NavScreen.CrearNotaScreen.name) {
+            CrearNotaScreen(
+                leyNombre = leyViewModel.leySeleccionada?.nombre ?: "Código Civil",
+                onVolver = {
+                    navController.popBackStack()
+                },
+                onGuardadoExitoso = {
+                    navController.popBackStack() // Vuelve a la lista y aparece el nuevo apunte
                 }
             )
         }
@@ -71,15 +99,6 @@ fun Navegacion(
             PerfilScreen(
                 viewModel = viewModel,
                 onCerrarSesion = onCerrarSesion
-            )
-        }
-
-        // Pantalla de Crear Nota
-        composable(NavScreen.CrearNotaScreen.name) {
-            CrearNotaScreen(
-                leyNombre = leyViewModel.leySeleccionada?.nombre ?: "Código Civil",
-                onVolver = { navController.popBackStack() },
-                onGuardadoExitoso = { navController.popBackStack() }
             )
         }
     }
