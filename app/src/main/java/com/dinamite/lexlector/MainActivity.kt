@@ -26,9 +26,12 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
-        val splashScreen =  installSplashScreen()
+        // Inicializa el repositorio de usuarios para restaurar sesión guardada
+        com.dinamite.lexlector.repository.UsuarioRepository.iniciar(this)
+
+        val splashScreen = installSplashScreen()
         var showSplashScreen = true
-        splashScreen.setKeepOnScreenCondition {showSplashScreen}
+        splashScreen.setKeepOnScreenCondition { showSplashScreen }
 
         lifecycleScope.launch {
             delay(2000.milliseconds)
@@ -36,7 +39,6 @@ class MainActivity : ComponentActivity() {
         }
 
         // Inicializamos el ViewModel que maneja toda la lógica de cuentas
-
         super.onCreate(savedInstanceState)
         setContent {
             LexLectorTheme(darkTheme = authViewModel.modoOscuro) {
@@ -44,37 +46,43 @@ class MainActivity : ComponentActivity() {
                 androidx.compose.material3.Surface(
                     color = androidx.compose.material3.MaterialTheme.colorScheme.background
                 ) {
-                    var pantallaActual by remember { mutableStateOf("bienvenida") }
+                    //Si ya hay usuario logueado, parte en "inicio", sino en "bienvenida"
+                    val sesionIniciada = com.dinamite.lexlector.repository.UsuarioRepository.usuarioLogueado != null
+                    var pantallaActual by remember { mutableStateOf(if (sesionIniciada) "inicio" else "bienvenida") }
+
                     when (pantallaActual) {
-                    "bienvenida" -> {
-                        BienvenidaScreen(
-                            onLoginClick = { pantallaActual = "login" },
-                            onRegisterClick = { pantallaActual = "registro" }
-                        )
-                    }
-                    "login" -> {
-                        LoginScreen(
-                            viewModel = authViewModel,
-                            onLoginExitoso = { pantallaActual = "inicio" },
-                            onIrARegistro = { pantallaActual = "registro" }
-                        )
-                    }
-                    "registro" -> {
-                        RegistroScreen(
-                            viewModel = authViewModel,
-                            onRegistroExitoso = { pantallaActual = "login" },
-                            onVolverALogin = { pantallaActual = "login" }
-                        )
-                    }
-                    "inicio" -> {
-                        PrincipalScreen(
-                            viewModel = authViewModel,
-                            onCerrarSesion = { pantallaActual = "login" }
-                        )
+                        "bienvenida" -> {
+                            BienvenidaScreen(
+                                onLoginClick = { pantallaActual = "login" },
+                                onRegisterClick = { pantallaActual = "registro" }
+                            )
+                        }
+
+                        "login" -> {
+                            LoginScreen(
+                                viewModel = authViewModel,
+                                onLoginExitoso = { pantallaActual = "inicio" },
+                                onIrARegistro = { pantallaActual = "registro" }
+                            )
+                        }
+
+                        "registro" -> {
+                            RegistroScreen(
+                                viewModel = authViewModel,
+                                onRegistroExitoso = { pantallaActual = "login" },
+                                onVolverALogin = { pantallaActual = "login" }
+                            )
+                        }
+
+                        "inicio" -> {
+                            PrincipalScreen(
+                                viewModel = authViewModel,
+                                onCerrarSesion = { pantallaActual = "login" }
+                            )
+                        }
                     }
                 }
             }
         }
     }
-}
 }
