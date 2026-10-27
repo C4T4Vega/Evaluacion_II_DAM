@@ -6,7 +6,7 @@ import androidx.compose.runtime.setValue
 import com.dinamite.lexlector.model.Usuario
 
 
-object UsuarioRepository {
+object  UsuarioRepository {
     // Lista de usuarios inicializada con usuarios sintéticos/ficticios de prueba
     private var _usuarios by mutableStateOf(
         listOf(
