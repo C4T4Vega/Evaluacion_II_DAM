@@ -28,7 +28,8 @@ import com.dinamite.lexlector.viewmodel.LeyViewModel
 fun DetalleLeyScreen(
     viewModel: LeyViewModel,
     onVolver: () -> Unit,
-    onVerApuntes: () -> Unit
+    onVerApuntes: () -> Unit,
+    onLeer: () -> Unit
 ) {
     // 1. Obtenemos la ley seleccionada desde el ViewModel
     val ley = viewModel.leySeleccionada
@@ -119,7 +120,7 @@ fun DetalleLeyScreen(
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Button(
-                onClick = { /* En Semana 3 abrirá el lector */ },
+                onClick = onLeer,//Abre la pantalla de lectura
                 modifier = Modifier.weight(1f),
                 colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.azul))
             ) {
