@@ -25,17 +25,21 @@ import com.dinamite.lexlector.R
 import com.dinamite.lexlector.model.Apunte
 import com.dinamite.lexlector.repository.ApunteRepository
 
+
+//Pantalla para crear o editar apunte actualiza el apunte con ApunteRepository.actualizarApunte()
+
 @Composable
 fun CrearNotaScreen(
     leyNombre: String = "Código Civil",
     onVolver: () -> Unit,
     onGuardadoExitoso: () -> Unit
 ) {
-    var titulo by remember { mutableStateOf("") }
-    var contenido by remember { mutableStateOf("") }
-    var conceptoPrincipal by remember { mutableStateOf("") }
-    var subconcepto1 by remember { mutableStateOf("") }
-    var subconcepto2 by remember { mutableStateOf("") }
+    val apunteEnEdicion = if (ApunteRepository.modoEdicion) ApunteRepository.apunteSeleccionado else null
+    var titulo by remember { mutableStateOf(apunteEnEdicion?.titulo ?: "") }
+    var contenido by remember { mutableStateOf(apunteEnEdicion?.contenido ?: "") }
+    var conceptoPrincipal by remember { mutableStateOf(apunteEnEdicion?.conceptoPrincipal ?: "") }
+    var subconcepto1 by remember { mutableStateOf(apunteEnEdicion?.subconcepto1 ?: "") }
+    var subconcepto2 by remember { mutableStateOf(apunteEnEdicion?.subconcepto2 ?: "") }
     var mensajeError by remember { mutableStateOf("") }
 
     Column(
@@ -58,14 +62,14 @@ fun CrearNotaScreen(
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = "Nuevo Apunte de Estudio",
+            text = if (ApunteRepository.modoEdicion) "Editar Apunte" else "Nuevo Apunte de Estudio",
             fontFamily = FontFamily(Font(R.font.clashgrotesk)),
             fontSize = 22.sp,
             fontWeight = FontWeight.Bold,
             color = colorResource(id = R.color.azul)
         )
         Text(
-            text = "Asociado a: $leyNombre",
+            text = "Asociado a: ${apunteEnEdicion?.leyNombre ?: leyNombre}",
             fontSize = 13.sp,
             color = Color.Gray
         )
@@ -144,7 +148,7 @@ fun CrearNotaScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // VISTA PREVIA DEL ESQUEMA VISUAL
+        // Vista previa del esquma
         Card(
             modifier = Modifier.fillMaxWidth(),
             colors = CardDefaults.cardColors(containerColor = colorResource(id = R.color.cian_azul).copy(alpha = 0.3f))
@@ -156,7 +160,7 @@ fun CrearNotaScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "VISTA PREVIA DEL ESQUEMA",
+                    text = "vista previa esquma",
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Bold,
                     color = colorResource(id = R.color.azul)
@@ -236,23 +240,44 @@ fun CrearNotaScreen(
                 if (titulo.isBlank() || contenido.isBlank()) {
                     mensajeError = "Debes ingresar al menos título y contenido."
                 } else {
-                    ApunteRepository.agregarApunte(
-                        Apunte(
-                            titulo = titulo,
-                            contenido = contenido,
-                            leyNombre = leyNombre,
-                            conceptoPrincipal = conceptoPrincipal,
-                            subconcepto1 = subconcepto1,
-                            subconcepto2 = subconcepto2
+                    if (ApunteRepository.modoEdicion && apunteEnEdicion != null) {
+                        val correoUsuario = apunteEnEdicion.usuarioCorreo.ifBlank {
+                            com.dinamite.lexlector.repository.UsuarioRepository.usuarioLogueado?.correo.orEmpty()
+                        }
+                        ApunteRepository.actualizarApunte(
+                            apunteEnEdicion.copy(
+                                titulo = titulo,
+                                contenido = contenido,
+                                leyNombre = apunteEnEdicion.leyNombre,
+                                conceptoPrincipal = conceptoPrincipal,
+                                subconcepto1 = subconcepto1,
+                                subconcepto2 = subconcepto2,
+                                usuarioCorreo = correoUsuario
+                            )
                         )
-                    )
-                    onGuardadoExitoso()
+                        ApunteRepository.modoEdicion = false
+                        onGuardadoExitoso()
+                    } else {
+                        val correoUsuario = com.dinamite.lexlector.repository.UsuarioRepository.usuarioLogueado?.correo.orEmpty()
+                        ApunteRepository.agregarApunte(
+                            Apunte(
+                                titulo = titulo,
+                                contenido = contenido,
+                                leyNombre = apunteEnEdicion?.leyNombre ?: leyNombre,
+                                conceptoPrincipal = conceptoPrincipal,
+                                subconcepto1 = subconcepto1,
+                                subconcepto2 = subconcepto2,
+                                usuarioCorreo = correoUsuario
+                            )
+                        )
+                        onGuardadoExitoso()
+                    }
                 }
             },
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.azul))
         ) {
-            Text("Guardar Apunte", color = Color.White, fontSize = 15.sp)
+            Text(if (ApunteRepository.modoEdicion) "Guardar Cambios" else "Guardar Apunte", color = Color.White, fontSize = 15.sp)
         }
     }
 }

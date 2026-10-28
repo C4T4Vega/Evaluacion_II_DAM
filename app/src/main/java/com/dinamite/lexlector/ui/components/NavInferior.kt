@@ -14,11 +14,12 @@ import com.dinamite.lexlector.R
 import com.dinamite.lexlector.model.Items_bottom_nav.*
 @Composable
 fun NavInferior(
-    navController : NavHostController
-){
+    navController: NavHostController
+) {
     val menuItems = listOf( //define una lista con los elementos que aparecen en la barra
         Item_bottom_nav1,
-        Item_bottom_nav_leyes, // <-- NUEVO: hace que aparezca el ícono en la barra azul
+        Item_bottom_nav_leyes,
+        Item_bottom_nav_apuntes, // ícono entre catálogo y perfil
         Item_bottom_nav2
     )
     //Mira el historial de navegacion para obtener la ruta actual de la pantalla
