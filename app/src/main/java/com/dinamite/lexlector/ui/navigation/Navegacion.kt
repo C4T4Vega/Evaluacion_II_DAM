@@ -15,6 +15,7 @@ import com.dinamite.lexlector.ui.CrearNotaScreen
 import com.dinamite.lexlector.ui.DetalleApunteScreen
 import com.dinamite.lexlector.ui.DetalleLeyScreen
 import com.dinamite.lexlector.ui.HomeScreen
+import com.dinamite.lexlector.ui.LectorScreen
 import com.dinamite.lexlector.ui.ListaApuntesScreen
 import com.dinamite.lexlector.ui.PerfilScreen
 import com.dinamite.lexlector.viewmodel.AuthViewModel
@@ -94,10 +95,21 @@ fun Navegacion(
                 onVerApuntes = {
                     // Ahora al tocar "Ver Apuntes", abre la Lista de Apuntes (Tarea 3.4)
                     navController.navigate(NavScreen.ListaApuntesScreen.name)
+                },
+                onLeer = {
+                    // Abrimos el lector conservando la ley seleccionada en el ViewModel compartido.
+                    navController.navigate(NavScreen.LectorScreen.name)
                 }
             )
         }
-
+        composable(NavScreen.LectorScreen.name) {
+            LectorScreen(
+                viewModel = leyViewModel, // mismo ViewModel compartido: así sabe qué ley se eligió
+                onVolver = {
+                    navController.popBackStack() // vuelve al detalle de la ley
+                }
+            )
+        }
         // Lista de Apuntes (Tarea 3.4)
         composable(NavScreen.ListaApuntesScreen.name) {
             ListaApuntesScreen(

@@ -7,6 +7,7 @@ enum class NavScreen {
     ApuntesScreen, // pantalla con lista de apuntes del usuario
     DetalleApunteScreen, // pantalla para ver un apunte
     DetalleLeyScreen, // nueva: pantalla de detalle de la ley
+    LectorScreen, //pantalla para leer
     ListaApuntesScreen, // Tarea 3.4: lista de apuntes
     CrearNotaScreen, // Tarea 3.3: crear notas
     PerfilScreen //pantalla del perfil de usuario
