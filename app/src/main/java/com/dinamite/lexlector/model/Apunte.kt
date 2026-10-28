@@ -8,5 +8,6 @@ data class Apunte(
     val leyNombre: String = "General",
     val conceptoPrincipal: String = "",
     val subconcepto1: String = "",
-    val subconcepto2: String = ""
+    val subconcepto2: String = "",
+    val usuarioCorreo: String = ""
 )

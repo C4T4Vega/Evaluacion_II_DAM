@@ -33,15 +33,19 @@ fun ListaApuntesScreen(
     onVolver: () -> Unit,
     onCrearNuevoApunte: () -> Unit
 ) {
-    // 1. Obtenemos los apuntes reactivos desde el Repositorio
-    val todosLosApuntes = ApunteRepository.apuntes
+    // 1. Obtenemos los apuntes del usuario logueado
+    val correoUsuario = com.dinamite.lexlector.repository.UsuarioRepository.usuarioLogueado?.correo
+    val todosLosApuntes = remember { ApunteRepository.obtenerApuntesDeUsuario(correoUsuario) }
+    val apuntesUsuario = ApunteRepository.apuntes
 
-    // Filtramos por la ley seleccionada si viene de DetalleLeyScreen, o mostramos todos
-    val listaMostrada = remember(todosLosApuntes, leyNombreFiltro) {
-        if (!leyNombreFiltro.isNullOrBlank()) {
-            todosLosApuntes.filter { it.leyNombre.equals(leyNombreFiltro, ignoreCase = true) }
-        } else {
-            todosLosApuntes
+    // Filtramos por el usuario logueado y opcionalmente por la ley seleccionada
+    val listaMostrada = remember(apuntesUsuario, correoUsuario, leyNombreFiltro) {
+        ApunteRepository.obtenerApuntesDeUsuario(correoUsuario).let { misApuntes ->
+            if (!leyNombreFiltro.isNullOrBlank()) {
+                misApuntes.filter { it.leyNombre.equals(leyNombreFiltro, ignoreCase = true) }
+            } else {
+                misApuntes
+            }
         }
     }
 
@@ -128,7 +132,7 @@ fun ListaApuntesScreen(
                     items(items = listaMostrada, key = { it.id }) { apunte ->
                         TarjetaApunte(
                             apunte = apunte,
-                            onEliminar = { ApunteRepository.eliminarApunte(apunte.id) }
+                            onEliminar = { ApunteRepository.eliminarApunte(apunte.id, correoUsuario) }
                         )
                     }
                 }

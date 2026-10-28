@@ -55,13 +55,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dinamite.lexlector.R
 import com.dinamite.lexlector.model.Ley
+import com.dinamite.lexlector.repository.ApunteRepository
+import com.dinamite.lexlector.repository.UsuarioRepository
 import com.dinamite.lexlector.ui.components.TarjetaLibro
 import com.dinamite.lexlector.viewmodel.LeyViewModel
 
 @Composable
 fun HomeScreen(
     viewModel: LeyViewModel,
-    onLeyClick: (Ley) -> Unit
+    onLeyClick: (Ley) -> Unit,
+    onApunteClick: () -> Unit = {}
 ) {
     var buscadorAbierto by remember { mutableStateOf(false) }
     var consulta by remember { mutableStateOf("") }
@@ -170,9 +173,76 @@ fun HomeScreen(
                 leyes = viewModel.vistosRecientemente,
                 onLeyClick = onLeyClick
             )
+
+            Spacer(modifier = Modifier.height(28.dp))
+
+            SeccionMisApuntes(onApunteClick = onApunteClick)
         }
 
         Spacer(modifier = Modifier.height(24.dp))
+    }
+}
+
+//Al tocar un apunte se guarda en ApunteRepository.apunteSeleccionado y se navega al detalle
+
+@Composable
+private fun SeccionMisApuntes(
+    onApunteClick: () -> Unit = {}
+) {
+    val correoUsuario = UsuarioRepository.usuarioLogueado?.correo
+    val listaApuntes = ApunteRepository.apuntes
+    val misApuntes = remember(listaApuntes, correoUsuario) {
+        ApunteRepository.obtenerApuntesDeUsuario(correoUsuario)
+    }
+
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Text(
+            text = "Mis Apuntes",
+            fontSize = 18.sp,
+            fontWeight = FontWeight.SemiBold,
+            color = colorResource(id = R.color.azul)
+        )
+
+        Spacer(modifier = Modifier.height(10.dp))
+
+        if (misApuntes.isEmpty()) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(150.dp)
+                    .clip(RoundedCornerShape(20.dp))
+                    .background(colorResource(id = R.color.cian_azul).copy(alpha = 0.3f))
+                    .border(
+                        width = 1.dp,
+                        color = colorResource(id = R.color.cian_azul).copy(alpha = 0.6f),
+                        shape = RoundedCornerShape(24.dp)
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "Aún no hay apuntes creados",
+                    fontSize = 13.sp,
+                    color = Color.Gray
+                )
+            }
+        } else {
+            LazyRow(
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                contentPadding = PaddingValues(end = 8.dp)
+            ) {
+                items(items = misApuntes, key = { it.id }) { apunte ->
+                    com.dinamite.lexlector.ui.components.TarjetaLibroApunte(
+                        apunte = apunte,
+                        modifier = Modifier
+                            .width(72.dp)
+                            .clickable {
+                                com.dinamite.lexlector.repository.ApunteRepository.apunteSeleccionado = apunte
+                                onApunteClick()
+                            }
+                    )
+                }
+            }
+        }
     }
 }
 

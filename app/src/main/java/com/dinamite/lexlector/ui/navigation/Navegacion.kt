@@ -8,8 +8,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.dinamite.lexlector.repository.ApunteRepository
+import com.dinamite.lexlector.ui.ApuntesScreen
 import com.dinamite.lexlector.ui.CatalogoScreen
 import com.dinamite.lexlector.ui.CrearNotaScreen
+import com.dinamite.lexlector.ui.DetalleApunteScreen
 import com.dinamite.lexlector.ui.DetalleLeyScreen
 import com.dinamite.lexlector.ui.HomeScreen
 import com.dinamite.lexlector.ui.ListaApuntesScreen
@@ -39,6 +42,9 @@ fun Navegacion(
                     // Guarda la ley como "vista recientemente" y abre su detalle.
                     leyViewModel.seleccionarLey(ley)
                     navController.navigate(NavScreen.DetalleLeyScreen.name)
+                },
+                onApunteClick = {
+                    navController.navigate(NavScreen.DetalleApunteScreen.name)
                 }
             )
         }
@@ -49,6 +55,31 @@ fun Navegacion(
                 viewModel = leyViewModel,
                 onLeyClick = {
                     navController.navigate(NavScreen.DetalleLeyScreen.name)
+                }
+            )
+        }
+
+        // Lista de Apuntes del usuario
+        composable(NavScreen.ApuntesScreen.name) {
+            ApuntesScreen(
+                onCrearNuevoApunte = {
+                    navController.navigate(NavScreen.CrearNotaScreen.name)
+                },
+                onApunteClick = {
+                    navController.navigate(NavScreen.DetalleApunteScreen.name)
+                }
+            )
+        }
+
+        // Detalle de un apunte
+        composable(NavScreen.DetalleApunteScreen.name) {
+            DetalleApunteScreen(
+                onVolver = {
+                    ApunteRepository.modoEdicion = false
+                    navController.popBackStack()
+                },
+                onEditar = {
+                    navController.navigate(NavScreen.CrearNotaScreen.name)
                 }
             )
         }
@@ -86,10 +117,11 @@ fun Navegacion(
             CrearNotaScreen(
                 leyNombre = leyViewModel.leySeleccionada?.nombre ?: "Código Civil",
                 onVolver = {
+                    ApunteRepository.modoEdicion = false
                     navController.popBackStack()
                 },
                 onGuardadoExitoso = {
-                    navController.popBackStack() // Vuelve a la lista y aparece el nuevo apunte
+                    navController.popBackStack()
                 }
             )
         }
