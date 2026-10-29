@@ -1,6 +1,7 @@
 package com.dinamite.lexlector.viewmodel
 
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -18,6 +19,12 @@ class LeyViewModel : ViewModel() {
 
     // Documentos que el usuario ha abierto durante la sesión, del más reciente al más antiguo.
     val vistosRecientemente = mutableStateListOf<Ley>()
+
+    // Ajustes de lectura
+
+    var letraGrande by mutableStateOf(false)// false = letra normal, true = letra grande
+    var fondoSepia by mutableStateOf(false)// false = fondo claro, true = fondo sepia
+    var brillo by mutableFloatStateOf(-1f)// Brillo de la ventana entre 0.1 y 1.0. -1f significa "no tocar, usar el brillo del sistema".
 
     fun seleccionarLey(ley: Ley) {
         leySeleccionada = ley
