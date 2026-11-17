@@ -6,25 +6,53 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.dinamite.lexlector.model.Ley
 import com.dinamite.lexlector.repository.LeyRepository
+import com.dinamite.lexlector.repository.LeyesDataSource
+import kotlinx.coroutines.launch
 
-class LeyViewModel : ViewModel() {
+class LeyViewModel(
+    private val repository: LeyesDataSource = LeyRepository
+) : ViewModel() {
 
-    val todasLasLeyes = LeyRepository.listaLeyes
-    val leyesRecientes = todasLasLeyes.filter { it.esReciente }
+    // Constructor vacío para que Navegacion.kt siga creando el ViewModel con viewModel()
+    constructor() : this(LeyRepository)
+
+    var todasLasLeyes by mutableStateOf(LeyRepository.listaLeyes)
+        private set
+
+    val leyesRecientes: List<Ley>
+        get() = todasLasLeyes.filter { it.esReciente }
 
     var leySeleccionada by mutableStateOf<Ley?>(todasLasLeyes.firstOrNull())
         private set
 
-    // Documentos que el usuario ha abierto durante la sesión, del más reciente al más antiguo.
+    // Documentos que el usuario ha abierto durante la sesión, del más reciente al mas antiguo.
     val vistosRecientemente = mutableStateListOf<Ley>()
 
     // Ajustes de lectura
+    var letraGrande by mutableStateOf(false)
+    var fondoSepia by mutableStateOf(false)
+    var brillo by mutableFloatStateOf(-1f)
 
-    var letraGrande by mutableStateOf(false)// false = letra normal, true = letra grande
-    var fondoSepia by mutableStateOf(false)// false = fondo claro, true = fondo sepia
-    var brillo by mutableFloatStateOf(-1f)// Brillo de la ventana entre 0.1 y 1.0. -1f significa "no tocar, usar el brillo del sistema".
+    init {
+        cargarLeyesDesdeApi()
+    }
+
+    // Consulta el endpoint GET /leyes en Xano sin bloquear la interfaz
+    fun cargarLeyesDesdeApi() {
+        viewModelScope.launch {
+            try {
+                val leyesRemotas = repository.obtenerLeyesApi()
+                if (leyesRemotas.isNotEmpty()) {
+                    todasLasLeyes = leyesRemotas
+                }
+            } catch (_: Exception) {
+                // Si no hay internet o falla la API, mantiene las leyes locales sin caer
+            }
+        }
+    }
 
     fun seleccionarLey(ley: Ley) {
         leySeleccionada = ley
@@ -32,16 +60,16 @@ class LeyViewModel : ViewModel() {
         registrarVisto(ley)
     }
 
-    // Filtra las leyes por nombre, autor, descripción o año de actualización.
+    // Filtra las leyes por nombre, autor, descripcion o año de actualizacion.
     fun buscarLeyes(consulta: String): List<Ley> {
         val texto = consulta.trim()
         if (texto.isEmpty()) return emptyList()
 
         return todasLasLeyes.filter { ley ->
             ley.nombre.contains(texto, ignoreCase = true) ||
-                ley.autor.contains(texto, ignoreCase = true) ||
-                ley.descripcion.contains(texto, ignoreCase = true) ||
-                ley.anioActual.contains(texto, ignoreCase = true)
+                    ley.autor.contains(texto, ignoreCase = true) ||
+                    ley.descripcion.contains(texto, ignoreCase = true) ||
+                    ley.anioActual.contains(texto, ignoreCase = true)
         }
     }
 

@@ -5,10 +5,18 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.dinamite.lexlector.model.CambioLey
 import com.dinamite.lexlector.model.Ley
+import com.dinamite.lexlector.remote.RetrofitInstance
 
-object LeyRepository {
+// Interfaz para poder simular este repositorio en las pruebas unitarias
+interface LeyesDataSource {
+    suspend fun obtenerLeyesApi(): List<Ley>
+    suspend fun obtenerLeyPorIdApi(id: Int): Ley
+    suspend fun crearLeyApi(ley: Ley): Ley
+}
 
-    // Lista de leyes de ejemplo para mostrar en el catálogo
+object LeyRepository : LeyesDataSource {
+
+    // Lista local de respaldo (se muestra mientras carga o si no hay internet)
     val listaLeyes = listOf(
         Ley(
             id = 1,
@@ -51,6 +59,13 @@ object LeyRepository {
         )
     )
 
-    // Guarda cuál ley tocó el usuario para mostrarla en la pantalla de Detalle
+    // Guarda cual ley toco el usuario para mostrarla en la pantalla de Detalle
     var leySeleccionada by mutableStateOf<Ley?>(listaLeyes.first())
+
+    // Llamadas reales a los endpoints de Leyes en Xano
+    override suspend fun obtenerLeyesApi(): List<Ley> = RetrofitInstance.api.obtenerLeyes()
+
+    override suspend fun obtenerLeyPorIdApi(id: Int): Ley = RetrofitInstance.api.obtenerLeyPorId(id)
+
+    override suspend fun crearLeyApi(ley: Ley): Ley = RetrofitInstance.api.crearLey(ley)
 }
