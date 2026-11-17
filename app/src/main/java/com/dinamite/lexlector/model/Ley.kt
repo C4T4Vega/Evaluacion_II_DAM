@@ -13,5 +13,5 @@ data class Ley(
     val anioActual: String,
     val esReciente: Boolean,
     val descripcion: String,
-    val historial: List<CambioLey>
+    val historial: List<CambioLey>? = emptyList()
 )
