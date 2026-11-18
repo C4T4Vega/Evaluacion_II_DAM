@@ -12,6 +12,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import com.dinamite.lexlector.ui.BienvenidaScreen
 import com.dinamite.lexlector.ui.LoginScreen
+import com.dinamite.lexlector.ui.notificaciones.LoginConNotificacion
 import com.dinamite.lexlector.ui.PrincipalScreen
 import com.dinamite.lexlector.ui.RegistroScreen
 import com.dinamite.lexlector.ui.theme.LexLectorTheme
@@ -61,7 +62,7 @@ class MainActivity : ComponentActivity() {
                         }
 
                         "login" -> {
-                            LoginScreen(
+                            LoginConNotificacion(
                                 viewModel = authViewModel,
                                 onLoginExitoso = { pantallaActual = "inicio" },
                                 onIrARegistro = { pantallaActual = "registro" }
