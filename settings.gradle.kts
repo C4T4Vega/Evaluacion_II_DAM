@@ -24,4 +24,6 @@ dependencyResolutionManagement {
 
 rootProject.name = "LexLector"
 include(":app")
+
+
  

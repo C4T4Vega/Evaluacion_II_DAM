@@ -1,8 +1,11 @@
 package com.dinamite.lexlector.model
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
 // Molde para las notas y apuntes de estudio
+@Entity(tableName = "apuntes")
 data class Apunte(
-    val id: Int = 0,
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val titulo: String,
     val contenido: String,
     val leyNombre: String = "General",

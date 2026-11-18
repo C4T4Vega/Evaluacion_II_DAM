@@ -40,6 +40,8 @@ class MainActivity : ComponentActivity() {
 
         // Inicializamos el ViewModel que maneja toda la lógica de cuentas
         super.onCreate(savedInstanceState)
+        com.dinamite.lexlector.repository.UsuarioRepository.iniciar(this)
+        com.dinamite.lexlector.repository.ApunteRepository.iniciar(this)
         setContent {
             LexLectorTheme(darkTheme = authViewModel.modoOscuro) {
                 // Surface aplica el fondo oscuro o claro a TODAS las pantallas de la app

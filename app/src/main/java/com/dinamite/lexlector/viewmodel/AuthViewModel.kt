@@ -70,7 +70,13 @@ class AuthViewModel : ViewModel() {
     }
 
     //Variables y funciones de perfil del usuario para taera 1.6
-    var modoOscuro by mutableStateOf(false)
+    var modoOscuro by mutableStateOf(UsuarioRepository.leerModoOscuro())
+        private set
+
+    fun cambiarModoOscuro(activo: Boolean) {
+        modoOscuro = activo
+        UsuarioRepository.guardarModoOscuro(activo)
+    }
     var usarFuenteSans by mutableStateOf(true)
     var fotoPerfil by mutableStateOf<Bitmap?>(null)
     fun actualizarFotoPerfil(bitmap: Bitmap) {
