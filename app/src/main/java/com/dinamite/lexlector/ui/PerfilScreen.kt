@@ -227,7 +227,7 @@ fun PerfilScreen(
                 )
                 Switch(
                     checked = viewModel.modoOscuro,
-                    onCheckedChange = { viewModel.modoOscuro = it },
+                    onCheckedChange = { viewModel.cambiarModoOscuro(it) },
                     colors = SwitchDefaults.colors(
                         checkedThumbColor = colorResource(id = R.color.azul),
                         checkedTrackColor = colorResource(id = R.color.cian_azul),
