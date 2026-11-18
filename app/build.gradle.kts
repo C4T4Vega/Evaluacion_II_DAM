@@ -36,6 +36,12 @@ android {
 }
 
 dependencies {
+    // Retrofit y Gson (para consumir los endpoints de Xano)
+    implementation("com.squareup.retrofit2:retrofit:2.11.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
+
+    // Corrutinas (para hacer las llamadas sin congelar la pantalla)
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0")
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.material3)
