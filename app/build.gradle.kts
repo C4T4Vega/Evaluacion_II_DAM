@@ -36,6 +36,12 @@ android {
     }
 }
 
+tasks.withType<Test>().configureEach {
+    testLogging {
+        events("passed", "failed", "skipped")
+        showStandardStreams = true
+    }
+}
 dependencies {
     // Room Database
     implementation("androidx.room:room-runtime:2.7.2")
@@ -59,10 +65,13 @@ dependencies {
     implementation("androidx.hilt:hilt-navigation-compose:1.4.0")
     implementation("androidx.compose.material:material-icons-extended-android:1.7.8")
     testImplementation(libs.junit)
+    testImplementation(libs.junit)
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.9.0")
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.junit)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     debugImplementation(libs.androidx.compose.ui.tooling)
+
 }
