@@ -53,6 +53,9 @@ dependencies {
 
     // Corrutinas (para hacer las llamadas sin congelar la pantalla)
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0")
+
+    // Servidor HTTP falso para las pruebas unitarias de API y repositorio
+    testImplementation("com.squareup.okhttp3:mockwebserver:4.12.0")
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.material3)
